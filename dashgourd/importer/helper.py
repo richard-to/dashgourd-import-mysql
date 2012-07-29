@@ -2,7 +2,20 @@ import os.path
 import os
 import subprocess
 from dashgourd.importer.mysql import MysqlImporter
-
+from pytz import timezone
+def get_importer_from_env():
+    """Shortcut to initialize MysqlImporter from env vars
+    
+    Returns:
+        MysqlImporter
+    """
+    return MysqlImporter(
+        os.environ.get('MYSQL_URI'), 
+        os.environ.get('MONGO_URI'), 
+        os.environ.get('MONGO_DB'),
+        timezone(os.environ.get('MYSQL_TZ')))
+        
+    
 def import_users(query_name, query):
     """Boilerplate for loading user import scripts
     
@@ -18,8 +31,7 @@ def import_users(query_name, query):
         query: Query to execute with format tokens {start} and {end}
     """
     
-    importer = MysqlImporter(os.environ.get('MYSQL_URI'), 
-        os.environ.get('MONGO_URI'), os.environ.get('MONGO_DB'))
+    importer = get_importer_from_env()
     importer.import_users(query_name, query)
     importer.close()
     
@@ -32,8 +44,7 @@ def import_actions(action_name, query, query_name=None):
     if query_name is None:
         query_name = "{}_{}".format('action', action_name)
         
-    importer = MysqlImporter(os.environ.get('MYSQL_URI'), 
-        os.environ.get('MONGO_URI'), os.environ.get('MONGO_DB'))
+    importer = get_importer_from_env()
     importer.import_actions(action_name, query_name, query)
     importer.close()
     
@@ -46,8 +57,7 @@ def import_abtests(abtest, query, query_name=None):
     if query_name is None:
         query_name = "{}_{}".format('ab', abtest)
             
-    importer = MysqlImporter(os.environ.get('MYSQL_URI'), 
-        os.environ.get('MONGO_URI'), os.environ.get('MONGO_DB'))
+    importer = get_importer_from_env()
     importer.import_abtests(abtest, query_name, query)
     importer.close()
     
