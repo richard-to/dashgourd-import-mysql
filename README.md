@@ -1,3 +1,3 @@
 # Dashgourd Import for MySQL
 
-Helper functions to import MySQL data into DashGourd.
+Helper functions to import MySQL data into Dashgourd.
