@@ -51,7 +51,7 @@ def import_abtests(abtest, query, query_name=None):
     importer.import_abtests(abtest, query_name, query)
     importer.close()
     
-def run_import_scripts(location, args=[], whitelist=None):
+def run_scripts(location, args=[], whitelist=None):
     """Runs import scripts at specified folder location.
     
     This is a helper classs in the case that you split import 
@@ -66,6 +66,9 @@ def run_import_scripts(location, args=[], whitelist=None):
     
     This assumes the scripts are self contained and will send the 
     appropriate data to DashGourd.
+    
+    This function is not completely tied to import scripts. Can also 
+    be used to execute any kind of file.
     
     Args:
         location: Can be a single file or a directory. Not recursive.
@@ -91,3 +94,4 @@ def run_import_scripts(location, args=[], whitelist=None):
                 if whitelist is None or label in whitelist:
                     cmd_args[0] = script 
                     subprocess.call(cmd_args)
+                    

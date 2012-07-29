@@ -120,9 +120,7 @@ class MysqlImporter(object):
             action_name: Action name
             query: MySQL query to run
         """
-                
-        self.actions_api.register_action(action_name)
-
+        
         if self.mysql_conn.open:
             date_range = self.get_daterange(query_name)
             last_update = datetime.strptime(date_range['start'], self.date_format)
