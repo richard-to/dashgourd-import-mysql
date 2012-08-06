@@ -49,6 +49,7 @@ class MysqlImporter(object):
         self.import_api = ImportApi(mongodb)
         
         self.tz = tz
+
         self.date_format = '%Y-%m-%d %H:%M:%S'
 
     def get_daterange(self, query_name):
@@ -142,7 +143,7 @@ class MysqlImporter(object):
             self.import_api.set_last_update(query_name, last_update.astimezone(pytz.utc))
             cursor.close()        
         
-    def import_actions(self, action_name, query_name, query):
+    def import_actions(self, action_name, query_name, query, unique=False):
         """Imports actions into DashGourd
         
         The data will be inserted into the embedded document list named
@@ -156,9 +157,11 @@ class MysqlImporter(object):
             query_name: Name of query so we can keep track of last update
             action_name: Action name
             query: MySQL query to run
+            unique: Make sure action is unqiue. Defaults to False
         """
         
         if self.mysql_conn.open:
+
             daterange = self.get_daterange(query_name)
             last_update = daterange['start']
             query_params = self.convert_daterange_for_query(daterange)
@@ -167,7 +170,7 @@ class MysqlImporter(object):
             cursor.execute(query.format(**query_params))
             numrows = int(cursor.rowcount)
             
-            for i in range(numrows):        
+            for i in range(numrows):  
                 data = cursor.fetchone()
                              
                 data['name'] = action_name
@@ -181,7 +184,7 @@ class MysqlImporter(object):
                     
                 data['created_at'] = created_at.astimezone(pytz.utc)   
                                             
-                self.actions_api.insert_action(user_id, data)
+                self.actions_api.insert_action(user_id, data, unique)
             
             self.import_api.set_last_update(query_name, last_update.astimezone(pytz.utc))            
             cursor.close() 

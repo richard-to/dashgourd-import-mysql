@@ -9,6 +9,7 @@ def get_importer_from_env():
     Returns:
         MysqlImporter
     """
+
     return MysqlImporter(
         os.environ.get('MYSQL_URI'), 
         os.environ.get('MONGO_URI'), 
@@ -35,7 +36,7 @@ def import_users(query_name, query):
     importer.import_users(query_name, query)
     importer.close()
     
-def import_actions(action_name, query, query_name=None):
+def import_actions(action_name, query, query_name=None, unique=False):
     """Boilerplate for loading actions from import scripts
     
     See import_users method for more info.
@@ -45,7 +46,7 @@ def import_actions(action_name, query, query_name=None):
         query_name = "{}_{}".format('action', action_name)
         
     importer = get_importer_from_env()
-    importer.import_actions(action_name, query_name, query)
+    importer.import_actions(action_name, query_name, query, unique)
     importer.close()
     
 def import_abtests(abtest, query, query_name=None):
