@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='Dashgourd-Import-Mysql',
-    version='0.2.4',
+    version='0.2.6',
     url='https://github.com/richard-to/dashgourd-import-mysql',
     author='Richard To',
     description='Import data from MySQL into Dashgourd',
