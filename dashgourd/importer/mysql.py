@@ -4,6 +4,7 @@ from urlparse import urlparse
 import MySQLdb
 from pytz import timezone
 import pytz
+import json
 from dashgourd.api.actions import ActionsApi
 from dashgourd.api.imports import ImportApi
 from dashgourd.api.helper import init_mongodb
@@ -116,6 +117,15 @@ class MysqlImporter(object):
                 del data['_id']
                              
                 data['name'] = action_name
+
+                if 'meta' in data:
+                    meta = data['meta']
+                    del data['meta']
+                    meta_data = json.loads(meta)
+                    for key in meta_data:
+                        if isinstance(meta_data[key], (int)):
+                            meta_data[key] = long(meta_data[key])
+                    data = dict(data.items() + meta_data.items())
 
                 created_at = self.tz.localize(data['created_at'])
                 if created_at > last_update:
